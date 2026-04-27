@@ -1,0 +1,43 @@
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+    public static void printNestedInventory(HashMap<String, HashMap<String, Integer>> inventory) {
+        // Перебираем каждую категорию во внешнем HashMap
+        // Для каждой категории выводим "Category: <name>"
+        // Если внутренняя map пуста, выводим "  (No products)"
+        // Иначе перебираем каждый продукт и выводим "  Product: <name>, Price: <price>"
+        // Напишите код здесь
+        for (Map.Entry<String, HashMap<String, Integer>> categoryEntry : inventory.entrySet()) {
+            String categoryName = categoryEntry.getKey();
+            HashMap<String, Integer> products = categoryEntry.getValue();
+            
+            System.out.println("Category: " + categoryName);
+            
+            if (products.isEmpty()) {
+                System.out.println("  (No products)");
+            } else {
+                for (Map.Entry<String, Integer> productEntry : products.entrySet()) {
+                    String productName = productEntry.getKey();
+                    int price = productEntry.getValue();
+                    System.out.println("  Product: " + productName + ", Price: " + price);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String inventoryString = scanner.nextLine();
+
+        // Преобразуем JSON-строку во вложенную HashMap
+        Type inventoryType = new TypeToken<HashMap<String, HashMap<String, Integer>>>(){}.getType();
+        HashMap<String, HashMap<String, Integer>> inventory = new Gson().fromJson(inventoryString, inventoryType);
+
+        printNestedInventory(inventory);
+    }
+}
